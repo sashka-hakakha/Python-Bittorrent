@@ -4,22 +4,27 @@ import btdht
 import binascii
 from time import sleep
 from socket import *
+from bcoding import bencode, bdecode
 class Client:
-	def __init__(self,torrent):
-		self.torrent=torrent
-		self.info_hash = get_info_hash(self)
-		self.protocol_id = "BitTorrent protocol"
-		self.peer_id = "pigeon"
-		self.reserved_area = "\x00"*8
-	def get_info_hash(self):
-		
-		f = open(self.torrent,"rb") 
-		decoded = bencodepy.decode(f.read())
-		#encode torrent info
-		info = bencodepy.encode(dict(decoded.get(b"info"))) 
-		info_hash = hashlib.sha1(info).hexdigest() 
-		print("info hash = " + info_hash)
-		return info_hash
+        def __init__(self,filename):
+                self.filename = filename
+                self.info_hash = self.get_info_hash()
+                self.protocol_id = "BitTorrent protocol"
+                self.peer_id = "pigeon"
+                self.reserved_area = "\x00"*8
+                self.decoded_info = self.get_decoded_info()
+        def get_info_hash(self):		
+                f = open(self.filename,"rb") 
+                decoded = bencodepy.decode(f.read())
+                #encode torrent info
+                info = bencodepy.encode(dict(decoded.get(b"info"))) 
+                info_hash = hashlib.sha1(info).hexdigest() 
+                print("info hash = " + info_hash)
+                return info_hash
+        def get_decoded_info(self):
+            with open(self.filename, "rb") as f:
+                return bdecode(f)
+"""
 	def get_peers(self,torrent):
 
 	#build dht
@@ -47,3 +52,4 @@ def connect_to_peer(peers):
 
 peers = get_peers("debian.torrent")
 connect_to_peer(peers)
+"""
