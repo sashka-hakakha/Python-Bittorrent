@@ -17,6 +17,8 @@ class Tracker():
         self.peers = []
         self.pieces = None
         self.host_name = None
+        self.peer_id = client.peer_id
+        self.info_hash = None
     
     def convert_byte_peers(self, peers):
         byte_list= [peers[i:i+6] for i in range(0, len(peers), 6)]
@@ -54,8 +56,8 @@ class Tracker():
         info = bencode(torrent_info['info'])
         m = hashlib.sha1()
         m.update(info)
-        info_hash = m.digest()
-        url_encoded_info_hash= urllib.parse.quote_plus(info_hash) #url encoding of request
+        self.info_hash = m.digest()
+        url_encoded_info_hash= urllib.parse.quote_plus(self.info_hash) #url encoding of request
 
         m = hashlib.sha1()
         m.update(self.client.peer_id.encode('utf-8'))
@@ -75,5 +77,5 @@ class Tracker():
         compact_peers = decoded_request_data['peers']
         raw_peers = self.convert_byte_peers(compact_peers)
         for p in raw_peers:
-            self.peers.append(Peer(p[0],p[1]))
+            self.peers.append(Peer(p[0],p[1], self.num_pieces))
 
