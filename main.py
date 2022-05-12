@@ -229,7 +229,7 @@ def write_to_disk(pieces):
     to_write.close()
     print('file written')
 
-def main()
+def main():
     global BLOCK_SIZE
     BLOCK_SIZE = 16354
     filename = sys.argv[1]

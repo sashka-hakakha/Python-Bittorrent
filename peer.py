@@ -68,4 +68,3 @@ class Peer:
 
     def __str__(self):
         return "ip: " + str(self.ip) + " port: " + str(self.port)
-"""
